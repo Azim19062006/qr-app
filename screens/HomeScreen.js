@@ -8,11 +8,8 @@ import {
   FlatList,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
-
   // Пример популярных товаров
   const popularProducts = [
     { id: "1", name: "Продукт 1", image: null },
@@ -75,22 +72,6 @@ export default function HomeScreen() {
           numColumns={2}
           columnWrapperStyle={{ justifyContent: "space-between" }}
         />
-      </View>
-
-      {/* Нижняя навигация */}
-      <View style={styles.bottomNavigation}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Ionicons name="home" size={30} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Scanner")}>
-          <Ionicons name="qr-code" size={30} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
-          <Ionicons name="cart" size={30} color="black" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-          <Ionicons name="settings" size={30} color="black" />
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -200,12 +181,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
   },
-  bottomNavigation: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 10,
-    backgroundColor: "#fff",
-    borderTopWidth: 1,
-    borderTopColor: "#E0E0E0",
-  },
 });
+

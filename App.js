@@ -9,7 +9,7 @@ import ScannerScreen from "./screens/ScannerScreen";
 import ProductScreen from "./screens/ProductScreen";
 import CartScreen from "./screens/CartScreen";
 import DiscountsScreen from "./screens/DiscountsScreen";
-import CatalogScreen from "./screens/CatalogScreen"; 
+import CatalogScreen from "./screens/CatalogScreen"; // Каталог
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
