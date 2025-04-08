@@ -49,16 +49,6 @@ export default function CartScreen({ route }) {
     return cartItems.reduce((total, item) => total + item.price, 0).toFixed(2);
   };
 
-  // Функция оплаты (заглушка)
-  const handlePayment = () => {
-    Alert.alert("Оплата", "Оплата успешно проведена!", [
-      { text: "OK", onPress: () => {
-        clearCart();
-        navigation.navigate("Scanner"); // После оплаты сразу на экран сканирования
-      }},
-    ]);
-  };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Корзина</Text>
@@ -87,7 +77,9 @@ export default function CartScreen({ route }) {
           <Text style={styles.backButtonText}>Назад</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.payButton} onPress={handlePayment}>
+        <TouchableOpacity 
+        style={styles.payButton} 
+        onPress={() => navigation.navigate('PaymentComplete')}>
           <Text style={styles.payButtonText}>Оплатить</Text>
         </TouchableOpacity>
       </View>

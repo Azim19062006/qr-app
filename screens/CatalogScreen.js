@@ -1,6 +1,7 @@
-import React from "react";
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
-
+import React, { useState } from "react";
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from '@react-navigation/native';
 
 const categories = [
     { id: "1", name: "Meat, Poultry, Fish", image: require("../assets/meat.png") },
@@ -13,12 +14,12 @@ const categories = [
     { id: "8", name: "Confectionery", image: require("../assets/confectionery.png") },
     { id: "9", name: "Cooking", image: require("../assets/cooking.png") },
     { id: "10", name: "Sausages, Deli Meats", image: require("../assets/sausages.png") },
-    // Добавляйте категории по мере необходимости
-  ];
-  
-
+];
 
 const CatalogScreen = () => {
+  const [expanded, setExpanded] = useState(true);
+  const navigation = useNavigation();
+
   const renderCategoryItem = ({ item }) => (
     <TouchableOpacity style={styles.card}>
       <Image source={item.image} style={styles.image} />
@@ -28,13 +29,43 @@ const CatalogScreen = () => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={categories}
-        renderItem={renderCategoryItem}
-        keyExtractor={(item) => item.id}
-        numColumns={2} // Two items per row
-        contentContainerStyle={styles.list}
-      />
+      {/* Header */}
+      <View style={styles.header}>
+        <Ionicons name="menu" size={28} color="black" />
+        <TextInput 
+          style={styles.searchInput}
+          placeholder="Search"
+          placeholderTextColor="#888"
+        />
+        <View style={styles.headerIcons}>
+          <TouchableOpacity style={styles.notificationIcon}>
+            <Ionicons name="notifications-outline" size={28} color="black" />
+            <View style={styles.notificationBadge}>
+              <Text style={styles.notificationBadgeText}>2</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+            <Ionicons name="person-circle" size={28} color="black" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Toggle Button */}
+      <TouchableOpacity style={styles.toggleButton} onPress={() => setExpanded(!expanded)}>
+        <Text style={styles.toggleText}>{expanded ? "Close" : "Expand"} {expanded ? "▲" : "▼"}</Text>
+      </TouchableOpacity>
+
+      {/* Category List */}
+      {expanded && (
+        <FlatList
+          data={categories}
+          renderItem={renderCategoryItem}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 };
@@ -42,32 +73,82 @@ const CatalogScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#F3F3F3",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+    paddingTop: 20,
+    backgroundColor: "#F3F3F3",
+  },
+  searchInput: {
+    flex: 1,
+    backgroundColor: "#E0E0E0",
+    padding: 10,
+    borderRadius: 30,
+    marginHorizontal: 10,
+  },
+  headerIcons: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  notificationIcon: {
+    position: "relative",
+    marginRight: 10,
+  },
+  notificationBadge: {
+    position: "absolute",
+    top: -5,
+    right: -5,
+    backgroundColor: "red",
+    borderRadius: 10,
+    paddingHorizontal: 5,
+  },
+  notificationBadgeText: {
+    color: "white",
+    fontSize: 12,
+  },
+  toggleButton: {
+    alignSelf: "flex-end",
+    paddingRight: 20,
+    marginTop: 10,
+  },
+  toggleText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "black",
   },
   list: {
     paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingVertical: 10,
   },
   card: {
     flex: 1,
     margin: 10,
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderRadius: 20,
     overflow: "hidden",
-    elevation: 3,
     alignItems: "center",
+    justifyContent: "center",
+    height: 150,
   },
   image: {
     width: "100%",
-    height: 120,
-    resizeMode: "cover",
+    height: "100%",
+    borderRadius: 20,
   },
   text: {
-    fontSize: 14,
+    position: "absolute",
+    bottom: 10,
+    left: 10,
+    fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center",
-    padding: 10,
-    color: "#333",
+    color: "white",
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
   },
 });
 

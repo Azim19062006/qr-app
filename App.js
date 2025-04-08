@@ -9,7 +9,10 @@ import ScannerScreen from "./screens/ScannerScreen";
 import ProductScreen from "./screens/ProductScreen";
 import CartScreen from "./screens/CartScreen";
 import DiscountsScreen from "./screens/DiscountsScreen";
-import CatalogScreen from "./screens/CatalogScreen"; // Каталог
+import CatalogScreen from "./screens/CatalogScreen";
+import ProfileScreen from './screens/ProfileScreen';
+import QRCodeScreen from "./screens/QRCodeScreen";
+import PaymentCompleteScreen from "./screens/PaymentCompleteScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -26,7 +29,7 @@ function MainTabs() {
           } else if (route.name === "Catalog") {
             iconName = focused ? "grid" : "grid-outline";
           } else if (route.name === "Scanner") {
-            iconName = "qr-code-outline"; // Для централизованной кнопки
+            iconName = "qr-code-outline";
           } else if (route.name === "Cart") {
             iconName = focused ? "cart" : "cart-outline";
           } else if (route.name === "Discounts") {
@@ -37,7 +40,7 @@ function MainTabs() {
         },
         tabBarStyle: {
           height: 70,
-          backgroundColor: "#333", // Цвет нижней панели
+          backgroundColor: "#3B3B3B",
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -52,18 +55,18 @@ function MainTabs() {
         name="Scanner"
         component={ScannerScreen}
         options={{
-          tabBarLabel: "", // Убираем текст для центральной кнопки
+          tabBarLabel: "",
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name="qr-code"
-              size={30}
+              size={20}
               color={focused ? "#fff" : "#bbb"}
               style={{
-                backgroundColor: "#444",
-                borderRadius: 50,
-                padding: 10,
+                backgroundColor: "#FF5A5F",
+                borderRadius: 10,
+                padding: 5,
                 elevation: 5,
-                transform: [{ translateY: -15 }], // Поднимаем кнопку
+                transform: [{ translateY: -15 }],
               }}
             />
           ),
@@ -71,6 +74,7 @@ function MainTabs() {
       />
       <Tab.Screen name="Cart" component={CartScreen} />
       <Tab.Screen name="Discounts" component={DiscountsScreen} />
+      
     </Tab.Navigator>
   );
 }
@@ -79,12 +83,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
-        <Stack.Screen
-          name="Main"
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
+        <Stack.Screen name="Main" component={MainTabs} options={{ headerShown: false }} />
         <Stack.Screen name="Product" component={ProductScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false  }} />
+        <Stack.Screen name="QRCodeScreen" component={QRCodeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="PaymentComplete" component={PaymentCompleteScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
