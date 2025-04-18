@@ -6,13 +6,17 @@ export default function ProductScreen({ route }) {
   const navigation = useNavigation();
   const { product } = route.params; // Получаем данные о товаре
 
+  // Преобразование полей в нужный формат
+  const productName = product["Товар"];
+  const productPrice = product["Цена"];
+
   return (
     <View style={styles.container}>
       {/* Название товара */}
-      <Text style={styles.title}>{product.name}</Text>
+      <Text style={styles.title}>{productName}</Text>
       
       {/* Цена товара */}
-      <Text style={styles.price}>{product.price} c</Text>
+      <Text style={styles.price}>{productPrice} c</Text>
 
       {/* Кнопки */}
       <View style={styles.buttonContainer}>
@@ -27,7 +31,7 @@ export default function ProductScreen({ route }) {
         {/* Кнопка Добавить в корзину */}
         <TouchableOpacity 
           style={styles.addButton} 
-          onPress={() => navigation.navigate("Cart", { product })}
+          onPress={() => navigation.navigate("Main", { screen: "Cart", params: { product } })}
         >
           <Text style={styles.addButtonText}>Добавить в корзину</Text>
         </TouchableOpacity>

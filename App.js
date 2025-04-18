@@ -74,7 +74,6 @@ function MainTabs() {
       />
       <Tab.Screen name="Cart" component={CartScreen} />
       <Tab.Screen name="Discounts" component={DiscountsScreen} />
-      
     </Tab.Navigator>
   );
 }

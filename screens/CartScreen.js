@@ -7,19 +7,19 @@ export default function CartScreen({ route }) {
   const navigation = useNavigation();
   const [cartItems, setCartItems] = useState([]);
 
-  // Загружаем товары из AsyncStorage при открытии корзины
+  // Load cart items from AsyncStorage on component mount
   useEffect(() => {
     loadCart();
   }, []);
 
-  // Если пришёл новый товар, добавляем его в корзину
+  // If a new product is passed, add it to the cart
   useEffect(() => {
     if (route.params?.product) {
       addToCart(route.params.product);
     }
   }, [route.params]);
 
-  // Функция загрузки корзины из AsyncStorage
+  // Function to load cart from AsyncStorage
   const loadCart = async () => {
     try {
       const storedCart = await AsyncStorage.getItem("cart");
@@ -27,59 +27,87 @@ export default function CartScreen({ route }) {
         setCartItems(JSON.parse(storedCart));
       }
     } catch (error) {
-      console.error("Ошибка загрузки корзины:", error);
+      console.error("Error loading cart:", error);
     }
   };
 
-  // Функция добавления товара в корзину
+  // Function to add a product to the cart
   const addToCart = async (product) => {
-    const updatedCart = [...cartItems, product];
-    setCartItems(updatedCart);
-    await AsyncStorage.setItem("cart", JSON.stringify(updatedCart));
+    try {
+      // Load existing cart items from AsyncStorage
+      const existingCart = await AsyncStorage.getItem("cart");
+      const currentCart = existingCart ? JSON.parse(existingCart) : [];
+
+      // Check if the product already exists in the cart
+      const existingProduct = currentCart.find(item => item["Код товара"] === product["Код товара"]);
+      if (existingProduct) {
+        Alert.alert("Товар уже в корзине", "Этот товар уже добавлен в вашу корзину.");
+        return;
+      }
+
+      // Add the new product to the cart
+      const updatedCart = [...currentCart, product];
+
+      // Save the updated cart to AsyncStorage
+      await AsyncStorage.setItem("cart", JSON.stringify(updatedCart));
+
+      // Update state
+      setCartItems(updatedCart);
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    }
   };
 
-  // Функция очистки корзины (после оплаты)
-  const clearCart = async () => {
-    await AsyncStorage.removeItem("cart");
-    setCartItems([]);
-  };
-
-  // Функция подсчёта итоговой суммы
+  // Function to calculate the total price of all cart items
   const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price, 0).toFixed(2);
+    return cartItems.reduce((total, item) => total + item["Цена"], 0).toFixed(2);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Корзина</Text>
 
-      {/* Список товаров */}
+      {/* List of cart items */}
       <FlatList
         data={cartItems}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={styles.cartItem}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemPrice}>{item.price} c</Text>
+            <Text style={styles.itemName}>{item["Товар"]}</Text>
+            <Text style={styles.itemPrice}>{item["Цена"]} c</Text>
           </View>
         )}
       />
 
-      {/* Итоговая сумма */}
+      {/* Total Price */}
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>Итого:</Text>
         <Text style={styles.totalPrice}>{getTotalPrice()} c</Text>
       </View>
 
-      {/* Кнопки */}
+      {/* Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate("Scanner")}>
           <Text style={styles.backButtonText}>Назад</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
-        style={styles.payButton} 
-        onPress={() => navigation.navigate('PaymentComplete')}>
+          style={styles.payButton} 
+          onPress={async () => {
+            try {
+              // Clear cart data from AsyncStorage
+              await AsyncStorage.removeItem("cart");
+
+              // Clear the cart in the state
+              setCartItems([]);
+
+              // Optionally navigate to another screen after clearing the cart (e.g., a confirmation screen)
+              navigation.navigate("PaymentComplete");
+            } catch (error) {
+              console.error("Error clearing the cart:", error);
+            }
+          }}
+        >
           <Text style={styles.payButtonText}>Оплатить</Text>
         </TouchableOpacity>
       </View>

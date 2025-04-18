@@ -37,10 +37,10 @@ export default function ScannerScreen() {
     if (data && !qrLock.current) {
       qrLock.current = true;
       setScanned(true);
-
-      // Ищем товар в JSON
-      const product = products.find((item) => item.code === data.trim());
-
+  
+      // Ищем товар в JSON по полю "Код товара"
+      const product = products.find((item) => item["Код товара"] === data.trim());
+  
       if (product) {
         navigation.navigate("Product", { product });
       } else {
